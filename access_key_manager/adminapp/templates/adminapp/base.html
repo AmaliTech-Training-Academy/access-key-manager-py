@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Key Manager{% endblock %}</title>
+</head>
+<body>
+  <nav>
+    <ul>
+      <li><a href="{% url 'access_key_list' %}">Access Keys</a></li>
+      <li><a href="{% url 'access_key_generate' %}">Generate Access Key</a></li>
+    </ul>
+  </nav>
+  <main>
+    {% block content %}
+    {% endblock %}
+  </main>
+</body>
+</html>
