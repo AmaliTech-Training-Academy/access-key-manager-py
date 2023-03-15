@@ -1,0 +1,24 @@
+
+
+{% block content %}
+    <h2>Access Key List</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Access Key</th>
+                <th>Status</th>
+                <th>Expiration Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for access_key in access_keys %}
+                <tr>
+                    <td>{{ access_key.access_key }}</td>
+                    <td>{% if access_key.is_active %}Active{% else %}Expired{% endif %}</td>
+                    <td>{{ access_key.expiry_date }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+
