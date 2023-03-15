@@ -1,0 +1,41 @@
+<!-- access_key_list.html -->
+{% extends 'adminapp/base.html' %}
+
+{% block content %}
+  <h2>Access Keys</h2>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Key</th>
+        <th>Status</th>
+        <th>Date of Procurement</th>
+        <th>Expiry Date</th>
+        {% if user.is_staff %}
+          <th>Actions</th>
+        {% endif %}
+      </tr>
+    </thead>
+    <tbody>
+      {% for access_key in object_list %}
+        <tr>
+          <td>{{ access_key.key }}</td>
+          <td>{{ access_key.status }}</td>
+          <td>{{ access_key.date_of_procurement }}</td>
+          <td>{{ access_key.expiry_date }}</td>
+          {% if user.is_superuser %}
+            <td>
+              <a href="{% url 'access_key_update' access_key.pk %}">Update</a>
+            </td>
+          {% endif %}
+        </tr>
+      {% empty %}
+        <tr>
+          <td colspan="5">No access keys found.</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% if access_key.status == 'active' %}
+  <a href="{% url 'access_key_revoke' access_key.id %}">Revoke</a>
+{% endif %}
+{% endblock %}
