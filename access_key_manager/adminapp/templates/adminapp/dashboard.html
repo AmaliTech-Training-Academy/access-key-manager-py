@@ -22,7 +22,7 @@
           <td>{{ access_key.status }}</td>
           <td>{{ access_key.date_of_procurement }}</td>
           <td>{{ access_key.expiry_date }}</td>
-          {% if user.is_staff %}
+          {% if user.is_superuser %}
             <td>
               <a href="{% url 'access_key_update' access_key.pk %}">Update</a>
             </td>
@@ -35,4 +35,7 @@
       {% endfor %}
     </tbody>
   </table>
+  {% if access_key.status == 'active' %}
+  <a href="{% url 'access_key_revoke' access_key.id %}">Revoke</a>
+{% endif %}
 {% endblock %}
