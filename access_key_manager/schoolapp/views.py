@@ -1,7 +1,16 @@
 from django.shortcuts import render
-# from .models import AccessKey
+from django.contrib.auth.decorators import login_required
+from .models import AccessKey,School
 
-# def access_key_list(request):
-#     access_keys = AccessKey.objects.all()
-#     return render(request, 'access_key_list.html', {'access_keys': access_keys})
+@login_required
+def access_key_list(request):
+    school = School.objects.get(name=request.user.school_name)
+    access_keys = AccessKey.objects.filter(school=school)
+    context = {'access_keys': access_keys}
+    return render(request, 'access_key_list.html') 
+
+
+
+
+
 
