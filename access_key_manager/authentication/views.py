@@ -17,6 +17,7 @@ from django.views import generic
 from django.utils.html import strip_tags
 from .validator import CustomPasswordValidator
 from django.core.exceptions import ValidationError
+
 class SignUpView(generic.CreateView):
     form_class = SignUpForm
     template_name = 'accounts/signup.html'
@@ -80,7 +81,7 @@ def login_view(request):
                 if next_url:
                     return redirect(next_url)
                 else:
-                    return redirect('fileapp:upload_list')
+                    return redirect('adminapp:access_key_list')
             else:
                 return render(request, 'login.html', {'form': form, 'error': 'Invalid login credentials', 'next': next_url})
     return render(request, 'accounts/login.html', {'form': form, 'next': next_url})
