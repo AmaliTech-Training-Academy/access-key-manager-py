@@ -11,8 +11,7 @@
         <th>Status</th>
         <th>Date of Procurement</th>
         <th>Expiry Date</th>
-        <th>Expiry Date</th>
-        {% if user.is_staff %}
+        {% if user.is_superuser %}
           <th>Actions</th>
         {% endif %}
       </tr>
@@ -39,8 +38,6 @@
       
     </tbody>
   </table>
-  <h2><a href="{% url 'adminapp:access_key_info' %}">Get access key api</a></h2>
-  {% comment %} {% if access_key.status == 'active' %}
-  <a href="{% url 'adminapp:access_key_revoke' access_key.id %}">Revoke</a> {% endcomment %}
-{% comment %} {% endif %} {% endcomment %}
+  <h2><a href="{% url 'adminapp:get_email' %}">Get access key api</a></h2>
+  
 {% endblock %}

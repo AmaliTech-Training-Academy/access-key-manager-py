@@ -1,0 +1,7 @@
+{% block content %}
+<h4>Hello please enter your email below</h4>
+<form method="post">
+    {% csrf_token %} {{ form.as_p }}
+    <button type="submit"><a href="{% url 'adminapp:access_key_info' %}">Send</a></button>
+</form>
+{% endblock %}

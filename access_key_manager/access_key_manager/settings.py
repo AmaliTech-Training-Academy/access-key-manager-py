@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'schoolapp',
     'authentication',
-    "adminapp"
+    'adminapp',
+    'rest_framework',
 
 ]
 AUTH_USER_MODEL = "authentication.CustomUser"
