@@ -1,22 +1,27 @@
 from django.db import models
 from django.conf import settings
-from django.contrib.auth.models import User
+from authentication.models import CustomUser
 
 class School(models.Model):
     name = models.CharField(max_length=100)
+    active_key = models.ForeignKey('AccessKey', null=True, blank=True, on_delete=models.SET_NULL, related_name='school')
 
-class AccessKey(models.Model):
-    ACCESS_KEY_STATUS_CHOICES = [
-        ('active', 'Active'),
-        ('expired', 'Expired'),
-        ('revoked', 'Revoked'),
-    ]
-    key = models.CharField(max_length=100)
-    status = models.CharField(max_length=20, choices=ACCESS_KEY_STATUS_CHOICES, default='active')
-    date_of_procurement = models.DateField()
-    expiry_date = models.DateField()
-    assigned_to = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
+    #status, date of procurement and expiry date
+    def school_key_info(self, school):
+        if self.school == school:
+            return{
+                'status': self.status,
+                'date_of_procurement': self.date_of_procurement,
+                'expiry_date': self.expiry_date,
+            }       
+        else:
+            return None                   
+
+class UserProfile(models.Model):
     school = models.ForeignKey(School, on_delete=models.CASCADE)
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+
+
 
 
 
