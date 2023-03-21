@@ -2,6 +2,7 @@ from django.contrib.auth.models import AbstractUser,BaseUserManager
 from django.db import models
 
 
+
 class CustomUserManager(BaseUserManager):
     """Define a model manager for User model with no username field."""
 
@@ -16,6 +17,7 @@ class CustomUserManager(BaseUserManager):
         try:
             user = self.model(
                 email = self.normalize_email(email),
+                
                 *args,
                 **kwargs
             )
