@@ -11,7 +11,7 @@
     {% csrf_token %}
     <label for="school">School:</label>
     <select name="school" id="school">
-      {% for school in schools %}
+      {% for school in School %}
         <option value="{{ school.pk }}">{{ school.name }}</option>
       {% endfor %}
     </select><br><br>

@@ -16,6 +16,7 @@ def key_info(request, school_id):
     school = get_object_or_404(School, id=school_id)
     keys = AccessKey.objects.filter(school=school)
 
+
     key_info_list = []
     for key in keys:
         key_info = key.school_key_info(school)
@@ -56,3 +57,4 @@ def school_view(request):
             form = SchoolForm()
 
     return render(request, 'school.html', {'form':form})
+

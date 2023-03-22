@@ -8,4 +8,7 @@
     {{ form.as_p }}
     <button type="submit">Update Access Key</button>
   </form>
+ {% if access_key.status == 'active' %}
+  <a href="{% url 'adminapp:access_key_revoke' access_key.id %}">Revoke</a> 
+{% endif %}
 {% endblock %}

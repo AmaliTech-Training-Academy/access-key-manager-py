@@ -1,4 +1,5 @@
 from django.urls import path
+
 from schoolapp import views
 app_name = 'schoolapp'
 
