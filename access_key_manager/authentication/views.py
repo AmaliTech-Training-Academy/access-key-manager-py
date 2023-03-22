@@ -80,7 +80,7 @@ def login_view(request):
                 if next_url:
                     return redirect(next_url)
                 else:
-                    return redirect('school')
+                    return redirect('schoolapp:school')
             else:
                 return render(request, 'login.html', {'form': form, 'error': 'Invalid login credentials', 'next': next_url})
     return render(request, 'accounts/login.html', {'form': form, 'next': next_url})

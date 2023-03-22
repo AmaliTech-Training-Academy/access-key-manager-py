@@ -6,8 +6,8 @@ from .models import School
 from .forms import SchoolForm
 from authentication.models import CustomUser
 # @login_required
-def access_key_list(request,school_id):
-    school = get_object_or_404(School, id=school_id)
+def access_key_list(request,user_id):
+    school = get_object_or_404(School, id=user_id)
     access_keys = AccessKey.objects.filter(school=school)
     context = {'access_keys': access_keys}
     return render(request, 'access_key_list.html',context) 
@@ -47,10 +47,11 @@ def school_view(request):
         form = SchoolForm(request.POST)
         if form.is_valid():
             name=form.cleaned_data['name']
+
             user = request.user
-            name = user
-            name.save()
-            redirect('access_key_list')
+            form.save()
+            # print(name)
+            print(user.id)
         else:
             form = SchoolForm()
 
