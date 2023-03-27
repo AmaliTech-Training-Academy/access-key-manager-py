@@ -17,15 +17,31 @@ class AccessKeyListView(ListView):
     paginate_by = 20
 
 # @login_required
-def access_key_generate(request):
-    if request.method == 'POST':
-        form = AccessKeyForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('adminapp:access_key_list')
-    else:
-        form = AccessKeyForm()
-    return render(request, 'adminapp/access_key_generate.html', {'form': form})
+def access_key_generate(request,uidb64, token):
+    schools = School.objects.all()
+    form = AccessKeyForm()
+    try:
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        user = CustomUser.objects.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, CustomUser.DoesNotExist
+        user = None
+
+    if user is not None and default_token_generator.check_token(user, tok
+        if request.method == 'POST':
+            form = AccessKeyForm(request.POST)
+            if form.is_valid():
+                form.save()
+                
+                return redirect('adminapp:access_key_list')
+        else:
+            form = AccessKeyForm()
+    context = {
+        'form':form,
+        'schools':schools,
+        'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+        'token': account_activation_token.make_token(user),
+    }  
+    return render(request, 'adminapp/access_key_generate.html', context)
 
 # @login_required
 def revoke_key(request, access_key_id):
