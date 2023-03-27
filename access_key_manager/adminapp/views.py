@@ -3,11 +3,18 @@ from django.views.generic import ListView
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from .models import AccessKey
+from schoolapp.models import School
 from .forms import AccessKeyForm,EmailForm
 from django.contrib import messages
 import datetime
 from django.http import JsonResponse, HttpResponseNotFound
 from django.views.decorators.csrf import csrf_exempt
+from authentication.models import CustomUser
+from django.utils.encoding import force_bytes
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from authentication.tokens import account_activation_token
+from django.utils.encoding import force_str
 
 # @method_decorator(login_required, name='dispatch')
 class AccessKeyListView(ListView):
@@ -16,6 +23,7 @@ class AccessKeyListView(ListView):
     context_object_name = 'access_keys'
     paginate_by = 20
 
+
 # @login_required
 def access_key_generate(request,uidb64, token):
     schools = School.objects.all()
@@ -23,10 +31,10 @@ def access_key_generate(request,uidb64, token):
     try:
         uid = force_str(urlsafe_base64_decode(uidb64))
         user = CustomUser.objects.get(pk=uid)
-    except (TypeError, ValueError, OverflowError, CustomUser.DoesNotExist
+    except (TypeError, ValueError, OverflowError, CustomUser.DoesNotExist):
         user = None
 
-    if user is not None and default_token_generator.check_token(user, tok
+    if user is not None and default_token_generator.check_token(user, token):
         if request.method == 'POST':
             form = AccessKeyForm(request.POST)
             if form.is_valid():
