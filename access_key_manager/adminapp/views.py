@@ -15,6 +15,7 @@ from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from authentication.tokens import account_activation_token
 from django.utils.encoding import force_str
+from django.core.mail import send_mail
 
 # @method_decorator(login_required, name='dispatch')
 class AccessKeyListView(ListView):
@@ -25,29 +26,27 @@ class AccessKeyListView(ListView):
 
 
 # @login_required
-def access_key_generate(request,uidb64, token):
-    schools = School.objects.all()
+def access_key_generate(request,school_id):
+    schools = get_object_or_404(School, id=school_id)
     form = AccessKeyForm()
-    try:
-        uid = force_str(urlsafe_base64_decode(uidb64))
-        user = CustomUser.objects.get(pk=uid)
-    except (TypeError, ValueError, OverflowError, CustomUser.DoesNotExist):
-        user = None
 
-    if user is not None and default_token_generator.check_token(user, token):
-        if request.method == 'POST':
-            form = AccessKeyForm(request.POST)
-            if form.is_valid():
-                form.save()
+    if request.method == 'POST':
+        form = AccessKeyForm(request.POST)
+        if form.is_valid():
+            form.save()
+
+            mail_subject = "Access Key for {school.name}"
+            message = f"Your access key for {schools.name} is {access_key.key}."
+            email_from = "douglasdanso66@gmail.com"
+            recipient_list = [schools.email]
+            send_mail(mail_subject, message, email_from, recipient_list)
                 
-                return redirect('adminapp:access_key_list')
+            return redirect('adminapp:access_key_list')
         else:
             form = AccessKeyForm()
     context = {
         'form':form,
         'schools':schools,
-        'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-        'token': account_activation_token.make_token(user),
     }  
     return render(request, 'adminapp/access_key_generate.html', context)
 
