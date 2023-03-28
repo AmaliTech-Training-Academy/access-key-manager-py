@@ -6,6 +6,8 @@ from rest_framework import status
 from django.shortcuts import get_object_or_404,render
 from .serializers import AccessKeySerializer
 from .forms import EmailForm
+from authentication.models import CustomUser
+from schoolapp.models import School
 
 
 def get_email(request):
@@ -13,21 +15,26 @@ def get_email(request):
         if request.method == 'post':
             form = EmailForm(request.Post)
             if form.is_valid:
-                api_email = form.cleaned_data['email']
-                api_email.save()
+                email = form.cleaned_data['email']
+                try:
+                    user = CustomUser.objects.get(email=email)
+                
+                except user.DoesNotExist:
+                    form.add_error(None, 'Email address not found, try again')
             else:
                 form = EmailForm()
         return render(request, 'adminapp/email_api_form.html', {'form': form})
 
 class GetActiveAccessKey(APIView):
     
-    def get(request,api_email):
-        # if request.method == 'POST':
-        #     email = request.POST.get('email')
-        if api_email:
+    def get(self,request):
+        email = get_email(request)
+        user = CustomUser.objects.get(email=email)
+        school = School.objects.get(user = user)
+        if email:
             try:
                     # access_key = AccessKey. get_object_or_404(email=email, status=AccessKey.ACTIVE)
-                access_key = get_object_or_404(AccessKey,  status=AccessKey.ACTIVE )
+                access_key = get_object_or_404(AccessKey,  status=AccessKey.ACTIVE ,school= school)
                 
             except AccessKey.DoesNotExist:
                 raise Http404    
