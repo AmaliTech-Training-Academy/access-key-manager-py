@@ -2,7 +2,7 @@
 from django import forms
 from django.utils import timezone
 import datetime
-
+from authentication.models import CustomUser
 from .models import AccessKey
 import random,string
 
@@ -26,3 +26,8 @@ class AccessKeyForm(forms.ModelForm):
     def generate_key(self):
         # Generate a random 64-character string for the key
         return ''.join(random.choices(string.ascii_uppercase + string.ascii_lowercase + string.digits, k=32))
+    
+class EmailForm(forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields =['email']
