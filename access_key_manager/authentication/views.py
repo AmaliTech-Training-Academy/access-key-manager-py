@@ -46,6 +46,10 @@ class SignUpView(generic.CreateView):
 
 
 def home_view(request):
+    # user = CustomUser.objects.get(pk=request.user.pk)
+    # if user.is_authenticated:
+    #     user = request.user
+    #     school = School.objects.get(user = user)
     return render(request, 'home.html')
 
 
@@ -75,12 +79,15 @@ def login_view(request):
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
             user = authenticate(username=username, password=password)
-            school =School.objects.get(user=user)
+            
             if user is not None:
                 login(request, user)
                 if next_url:
                     return redirect(next_url)
+                if user.is_superuser:
+                    return redirect('adminapp:access_key_list')
                 else:
+                    school =School.objects.get(user=user)
                     return redirect('schoolapp:access_key_list',school_id=school.id)
             else:
                 return render(request, 'login.html', {'form': form, 'error': 'Invalid login credentials', 'next': next_url})

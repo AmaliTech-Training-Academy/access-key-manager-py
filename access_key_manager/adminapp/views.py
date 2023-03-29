@@ -30,22 +30,25 @@ def access_key_generate(request,school_id):
     if request.method == 'POST':
         form = AccessKeyForm(request.POST)
         if form.is_valid():
-            form.save()
+            access_key = form.save(commit=False)
+            access_key.key = form.generate_key()
+            access_key.school = schools
+            access_key.save()
                 
-            # current_site = get_current_site(request)
-            # # access_key = AccessKey.objects.get(school =schools).order_by('date_of_procurement').first()
+            current_site = get_current_site(request)
+            # access_key = AccessKey.objects.get(school =schools).first()
 
-            # message=render_to_string('message.html', {
-            #     'user': user,
-            #     'domain': current_site.domain,
-            #     # 'access_key':access_key
-            # })
+            message=render_to_string('message.html', {
+                'user': user,
+                'domain': current_site.domain,
+                'access_key':access_key
+            })
        
-            # message = strip_tags(message)
-            # mail_subject = 'Access key Purchase'
-            # email_from = user.email
-            # recipient_list =["douglasdanso66@gmail.com"]
-            # send_mail( mail_subject, message, email_from, recipient_list )
+            message = strip_tags(message)
+            mail_subject = 'Access key Purchase'
+            email_from = user.email
+            recipient_list =["douglasdanso66@gmail.com"]
+            send_mail( mail_subject, message, email_from, recipient_list )
             return redirect('schoolapp:access_key_list', schools.id)
         else:
             form = AccessKeyForm()

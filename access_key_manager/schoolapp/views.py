@@ -9,7 +9,7 @@ from django.core.mail import send_mail
 from django.utils.html import strip_tags
 from django.contrib.sites.shortcuts import get_current_site
 from adminapp.views import access_key_generate
-
+from django.http import HttpResponseForbidden,HttpResponse
 
 #@login_required
 def access_key_list(request,school_id):
@@ -24,10 +24,10 @@ def access_key_list(request,school_id):
 
 def purchase_key(request, school_id):
     school = School.objects.get(id= school_id)
-    active_key = AccessKey.objects.filter(id = school_id, status='active')
+    active_key = AccessKey.objects.filter(id = school_id, status=AccessKey.ACTIVE)
 
     if active_key:
-        messages.warning(request, 'Yoyu already have an active key')
+        return HttpResponse('hello')
     else:
         return redirect('adminapp:access_key_generate', school_id=school.id)
 
