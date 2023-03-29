@@ -19,6 +19,7 @@ class AccessKeyForm(forms.ModelForm):
         #     raise forms.ValidationError('Expiry date cannot be in the past.')
         # else:
         access_key.expiry_date = self.cleaned_data['expiry_date']
+        # access_key.school = self.cleaned_data['school']
         if commit:
             access_key.save()
         return access_key
