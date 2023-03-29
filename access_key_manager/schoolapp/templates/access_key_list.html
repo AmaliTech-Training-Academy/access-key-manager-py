@@ -1,42 +1,46 @@
-
 {% block content %}
-<h1> Access Keys</h1>
-<h3> Welcome, {{school.school_name}}</h3>
-{% for access in access_keys %}
-{% if access_key.status == 'active'%}
+<h1>Access Keys</h1>
+ <h3>welcome, {{school.school_name}}</h3> 
+ <h4><a href= "{% url 'authentication:logout'%}"> Logout</a></h4>
+{% for access_key in access_keys %}
+{% if access_key.status == 'active' %}
 
-<p> Your active access key: {{access_key.key}} </p>
-<p> Expiry date: {{access_key.expiry_date}}</p>
-{% endif%}
+<p>Your active access key: {{ access_key.key }}</p>
+<p>expiry date : {{ access_key.expiry_date }}</p>
+{% endif %}
 {% endfor %}
 
-<h2> Access Key History</h2>
-
+<h2>Access Key History</h2>
 <table class="table">
-  <thead>
-    <tr>
-      <th>Key</th>
-      <th>Status</th>
-      <th>Procurement Date</th>
-      <th>Expiry Date</th>
-    </tr>
-  </thead>
-
-  <tbody>
-    {% for access_key in access_keys %}
-    <tr>
-      <td>{{ access_key.key }}</td>
-      <td>{{ access_key.status }}</td>
-      <td>{{ access_key.date_of_procurement }}</td>
-      <td>{{ access_key.expiry_date }}</td>
-      <td>{{ access_key.assigned_to}}</td>
-    </tr>
-    {% endfor %}
-  </tbody>
+    <thead>
+        <tr>
+        
+            <th>Key</th>
+            <th>Status</th>
+            <th>Date of Procurement</th>
+            <th>Expiry Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for access_key in access_keys %}
+        <tr>
+           
+            <td>{{ access_key.key }}</td>
+            <td>{{ access_key.status }}</td>
+            <td>{{ access_key.date_of_procurement }}</td>
+            <td>{{ access_key.expiry_date }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
 </table>
 
-<button><a href="{% url 'schoolapp:purchase_key' school.id %}"> Request Access Key</a></button>
 
-{% endblock%}
+<button><a href= "{% url 'schoolapp:purchase_key' school.id%}"> Request Access Key</a></button>
+
+
+{% endblock %}
+
+
+
 
 
