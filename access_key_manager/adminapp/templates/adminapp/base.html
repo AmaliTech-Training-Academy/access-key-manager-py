@@ -9,7 +9,7 @@
   <nav>
     <ul>
       <li><a href="{% url 'adminapp:access_key_list' %}">Access Keys</a></li>
-      <li><a href="{% url 'adminapp:access_key_generate' %}">Generate Access Key</a></li>
+       {% comment %} <li><a href="{% url 'adminapp:access_key_generate' school.id %}">Generate Access Key</a></li>  {% endcomment %}
     </ul>
   </nav>
   <main>
@@ -17,4 +17,3 @@
     {% endblock %}
   </main>
 </body>
-</html>
