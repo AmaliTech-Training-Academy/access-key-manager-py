@@ -12,9 +12,9 @@ from adminapp.views import access_key_generate
 
 
 #@login_required
-def access_key_list(request,user_id):
+def access_key_list(request,school_id):
     user = request.user 
-    school = get_object_or_404(School, id=user_id)
+    school = get_object_or_404(School, id=school_id)
     access_keys = AccessKey.objects.filter(school=school)
     context = {'access_keys': access_keys, 
                'school': school,
@@ -22,12 +22,12 @@ def access_key_list(request,user_id):
                 }
     return render(request, 'access_key_list.html',context) 
 
-def purchase(request, school_id):
+def purchase_key(request, school_id):
     school = School.objects.get(id= school_id)
-    active_key = AccessKey.objects.filter(id = school_id, status='active').first()
+    active_key = AccessKey.objects.filter(id = school_id, status='active')
 
     if active_key:
-        messages.warning(request, 'Yoyu already have an actie key')
+        messages.warning(request, 'Yoyu already have an active key')
     else:
         return redirect('adminapp:access_key_generate', school_id=school.id)
 
