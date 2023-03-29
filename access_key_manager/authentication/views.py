@@ -17,6 +17,7 @@ from django.views import generic
 from django.utils.html import strip_tags
 from .validator import CustomPasswordValidator
 from django.core.exceptions import ValidationError
+from schoolapp.models import School
 
 class SignUpView(generic.CreateView):
     form_class = SignUpForm
@@ -59,14 +60,12 @@ def activate(request, uidb64, token):
         user.is_active = True
         user.save()
         login(request, user)
-        return redirect('/')
+        return redirect('schoolapp:school')
         
     else:
         return render(request, 'accounts/activation_invalid.html')
     
     
-
-
 def login_view(request):
     form = LogInForm()
     next_url = request.GET.get('next', '')
@@ -76,18 +75,18 @@ def login_view(request):
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
             user = authenticate(username=username, password=password)
+            school =School.objects.get(user=user)
             if user is not None:
                 login(request, user)
                 if next_url:
                     return redirect(next_url)
                 else:
-
-
-                    return redirect('adminapp:access_key_list')
-
+                    return redirect('schoolapp:access_key_list',school_id=school.id)
             else:
                 return render(request, 'login.html', {'form': form, 'error': 'Invalid login credentials', 'next': next_url})
     return render(request, 'accounts/login.html', {'form': form, 'next': next_url})
+
+
 
 def logout_view(request):
     logout(request)
