@@ -6,6 +6,10 @@ from .models import AccessKey
 from schoolapp.models import School
 from .forms import AccessKeyForm
 from django.contrib import messages
+from django.core.mail import send_mail
+from django.utils.html import strip_tags
+from django.template.loader import render_to_string
+from django.contrib.sites.shortcuts import get_current_site
 
 # @method_decorator(login_required, name='dispatch')
 class AccessKeyListView(ListView):
