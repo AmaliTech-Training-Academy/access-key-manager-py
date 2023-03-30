@@ -37,7 +37,8 @@ def access_key_generate(request,school_id):
             # access_key.key = form.generate_key()
             access_key.school = schools
             if access_key.expiry_date and access_key.expiry_date < datetime.date.today():
-                raise ValidationError('Expiry date cannot be in the past.')
+                messages.warning(request,'Expiry date cannot be in the past.')
+                return redirect('adminapp:access_key_generate',schools.id)
             else:
                 access_key.expiry_date = form.cleaned_data['expiry_date']
             access_key.save()
@@ -48,7 +49,8 @@ def access_key_generate(request,school_id):
             message=render_to_string('message.html', {
                 'user': user,
                 'domain': current_site.domain,
-                'access_key':access_key
+                'access_key':access_key,
+                'schools':schools
             })
        
             message = strip_tags(message)
@@ -81,7 +83,13 @@ def access_key_update(request, access_key_id):
     if request.method == 'POST':
         form = AccessKeyForm(request.POST, instance=access_key)
         if form.is_valid():
+            if access_key.expiry_date and access_key.expiry_date < datetime.date.today():
+                messages.warning(request,'Expiry date cannot be in the past.')
+                return redirect('adminapp:access_key_update',access_key.id)
+            else:
+                access_key.expiry_date = form.cleaned_data['expiry_date']
             access_key = form.save()
+            
             messages.success(request, f'Access key {access_key.key} has been updated.')
             return redirect('adminapp:access_key_list')
     else:

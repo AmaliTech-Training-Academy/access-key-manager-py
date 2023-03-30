@@ -19,5 +19,11 @@
 
     <input type="submit" value="Generate Access Key">
 </form>
-
+{% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li>{% if message.tags %}<b> "{{ message.tags }}:"</b>{% endif %} {{ message }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
 {% endblock %}

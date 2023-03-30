@@ -40,5 +40,13 @@
     </tbody>
   </table>
   <h2><a href="{% url 'adminapp:access_key_info' %}">Get access key api</a></h2>
+
+  {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li>{% if message.tags %}<b> "{{ message.tags }}:"</b>{% endif %} {{ message }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
   
 {% endblock %}

@@ -11,4 +11,11 @@
  {% if access_key.status == 'active' %}
   <a href="{% url 'adminapp:access_key_revoke' access_key.id %}">Revoke</a> 
 {% endif %}
+{% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li>{% if message.tags %}<b> "{{ message.tags }}:"</b>{% endif %} {{ message }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
 {% endblock %}
