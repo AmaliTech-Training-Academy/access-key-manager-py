@@ -46,10 +46,7 @@ class SignUpView(generic.CreateView):
 
 
 def home_view(request):
-    # user = CustomUser.objects.get(pk=request.user.pk)
-    # if user.is_authenticated:
-    #     user = request.user
-    #     school = School.objects.get(user = user)
+    
     return render(request, 'home.html')
 
 

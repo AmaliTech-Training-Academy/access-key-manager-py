@@ -10,6 +10,8 @@ from django.core.mail import send_mail
 from django.utils.html import strip_tags
 from django.template.loader import render_to_string
 from django.contrib.sites.shortcuts import get_current_site
+import datetime
+from django.core.exceptions import ValidationError
 
 # @method_decorator(login_required, name='dispatch')
 class AccessKeyListView(ListView):
@@ -31,12 +33,17 @@ def access_key_generate(request,school_id):
         form = AccessKeyForm(request.POST)
         if form.is_valid():
             access_key = form.save(commit=False)
-            access_key.key = form.generate_key()
+            
+            # access_key.key = form.generate_key()
             access_key.school = schools
+            if access_key.expiry_date and access_key.expiry_date < datetime.date.today():
+                raise ValidationError('Expiry date cannot be in the past.')
+            else:
+                access_key.expiry_date = form.cleaned_data['expiry_date']
             access_key.save()
                 
             current_site = get_current_site(request)
-            # access_key = AccessKey.objects.get(school =schools).first()
+            access_key = AccessKey.objects.filter(school =schools,status='active').first()
 
             message=render_to_string('message.html', {
                 'user': user,

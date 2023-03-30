@@ -11,7 +11,7 @@ from django.contrib.sites.shortcuts import get_current_site
 from adminapp.views import access_key_generate
 from django.http import HttpResponseForbidden,HttpResponse
 
-#@login_required
+@login_required
 def access_key_list(request,school_id):
     user = request.user 
     school = get_object_or_404(School, id=school_id)
@@ -22,20 +22,23 @@ def access_key_list(request,school_id):
                 }
     return render(request, 'access_key_list.html',context) 
 
+@login_required
 def purchase_key(request, school_id):
-    school = School.objects.get(id= school_id)
-    active_key = AccessKey.objects.filter(id = school_id, status=AccessKey.ACTIVE)
+    school = School.objects.get(id=school_id)
+    active_key = AccessKey.objects.filter(school=school, status=AccessKey.ACTIVE).first()
 
     if active_key:
-        return HttpResponse('hello')
+        messages.warning(request, 'you already have an active access key')
+        return redirect('schoolapp:access_key_list', school_id=school.id)
     else:
         return redirect('adminapp:access_key_generate', school_id=school.id)
-
+    
+@login_required
 def requests(request, school_id):
     school = School.objects.get(id= school_id)
     return render(request, 'requests.html',{'school':school})
 
-
+@login_required
 def school_view(request):
     form = SchoolForm()
 
