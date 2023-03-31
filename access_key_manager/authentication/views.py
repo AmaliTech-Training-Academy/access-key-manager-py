@@ -15,8 +15,6 @@ from django.core.mail import send_mail
 from django.utils.encoding import force_str
 from django.views import generic
 from django.utils.html import strip_tags
-from .validator import CustomPasswordValidator
-from django.core.exceptions import ValidationError
 from schoolapp.models import School
 
 class SignUpView(generic.CreateView):

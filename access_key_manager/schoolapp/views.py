@@ -9,6 +9,7 @@ from django.core.mail import send_mail
 from django.utils.html import strip_tags
 from django.contrib.sites.shortcuts import get_current_site
 from adminapp.views import access_key_generate
+from django.core.paginator import Paginator
 from django.http import HttpResponseForbidden,HttpResponse
 
 @login_required
@@ -16,9 +17,14 @@ def access_key_list(request,school_id):
     user = request.user 
     school = get_object_or_404(School, id=school_id)
     access_keys = AccessKey.objects.filter(school=school)
+    paginator = Paginator(access_keys, 5) #
+
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
     context = {'access_keys': access_keys, 
                'school': school,
                 'user': user,
+                'page_obj':page_obj,
                 }
     return render(request, 'access_key_list.html',context) 
 

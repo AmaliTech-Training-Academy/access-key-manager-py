@@ -11,18 +11,18 @@ from django.utils.html import strip_tags
 from django.template.loader import render_to_string
 from django.contrib.sites.shortcuts import get_current_site
 import datetime
-from django.core.exceptions import ValidationError
 
-# @method_decorator(login_required, name='dispatch')
+
+@method_decorator(login_required, name='dispatch')
 class AccessKeyListView(ListView):
     model = AccessKey
     template_name = 'adminapp/dashboard.html'
     context_object_name = 'access_keys'
     ordering = ['school']
-    # paginate_by = 20
+    paginate_by = 10
 
 
-# @login_required
+@login_required
 def access_key_generate(request,school_id):
     user = request.user
     schools = School.objects.get(id = school_id)
@@ -68,7 +68,7 @@ def access_key_generate(request,school_id):
     
     return render(request, 'adminapp/access_key_generate.html', context)
 
-# @login_required
+@login_required
 def revoke_key(request, access_key_id):
     access_key = get_object_or_404(AccessKey, id=access_key_id)
     access_key.status = 'revoked'
@@ -76,7 +76,7 @@ def revoke_key(request, access_key_id):
     messages.success(request, 'Key revoked successfully.')
     return redirect('adminapp:access_key_list')
 
-# @login_required
+@login_required
 def access_key_update(request, access_key_id):
     access_key = get_object_or_404(AccessKey, pk=access_key_id)
 

@@ -8,8 +8,10 @@ from .serializers import AccessKeySerializer
 from .forms import EmailForm
 from authentication.models import CustomUser
 from schoolapp.models import School
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
 
-
+@method_decorator(login_required, name='dispatch')
 class GetActiveAccessKey(APIView):
     
     def get(self, request):

@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'authentication',
     'adminapp',
     'rest_framework',
+    
 
 ]
 AUTH_USER_MODEL = "authentication.CustomUser"
