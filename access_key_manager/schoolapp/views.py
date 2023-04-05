@@ -4,20 +4,15 @@ from django.contrib.auth.decorators import login_required
 from adminapp.models import AccessKey
 from .models import School
 from .forms import SchoolForm
-from authentication.tokens import account_activation_token
-from django.core.mail import send_mail
-from django.utils.html import strip_tags
-from django.contrib.sites.shortcuts import get_current_site
-from adminapp.views import access_key_generate
 from django.core.paginator import Paginator
-from django.http import HttpResponseForbidden,HttpResponse
+
 
 @login_required
 def access_key_list(request,school_id):
     user = request.user 
     school = get_object_or_404(School, id=school_id)
     access_keys = AccessKey.objects.filter(school=school)
-    paginator = Paginator(access_keys, 5) #
+    paginator = Paginator(access_keys, 20) 
 
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -39,10 +34,6 @@ def purchase_key(request, school_id):
     else:
         return redirect('adminapp:access_key_generate', school_id=school.id)
     
-@login_required
-def requests(request, school_id):
-    school = School.objects.get(id= school_id)
-    return render(request, 'requests.html',{'school':school})
 
 @login_required
 def school_view(request):
