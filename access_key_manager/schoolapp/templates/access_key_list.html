@@ -5,7 +5,8 @@
 
 
 <h3>welcome, {{school.school_name}}</h3>
-{% for access_key in access_keys %} {% if access_key.status == 'active' %}
+{% for access_key in page_obj %}
+ {% if access_key.status == 'active' %}
 
 <p>Your active access key: {{ access_key.key }}</p>
 <p>expiry date : {{ access_key.expiry_date }}</p>
@@ -23,7 +24,8 @@
         </tr>
     </thead>
     <tbody>
-        {% for access_key in access_keys %}
+      {% for access_key in page_obj %}
+
         <tr>
 
             <td>{{ access_key.key }}</td>
