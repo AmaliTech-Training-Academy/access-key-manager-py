@@ -20,7 +20,6 @@ def access_key_list(request,school_id):
 
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
-    paginate_by = 2
     context = { 
                'school': school,
                 'user': user,
@@ -56,5 +55,4 @@ def school_view(request):
 
     return render(request, 'school.html', {'form':form})
 
-#"// code for paginator with maximum 20 items per page in django"?
 
