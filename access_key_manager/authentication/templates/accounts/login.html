@@ -6,4 +6,11 @@
     {% if next %}
     <input type="hidden" name="next" value="{{ next }}">
 {% endif %}
+{% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li>{% if message.tags %}<b> "{{ message.tags }}:"</b>{% endif %} {{ message }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
 </form>

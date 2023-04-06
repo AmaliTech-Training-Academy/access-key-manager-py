@@ -16,6 +16,7 @@ from django.utils.encoding import force_str
 from django.views import generic
 from django.utils.html import strip_tags
 from schoolapp.models import School
+from django.contrib import messages
 
 class SignUpView(generic.CreateView):
     form_class = SignUpForm
@@ -69,14 +70,25 @@ def login_view(request):
     form = LogInForm()
     next_url = request.GET.get('next', '')
     if request.method == 'POST':
-        form = LogInForm(request, data=request.POST)
+        form = LogInForm(request.POST)
         if form.is_valid():
-            username = form.cleaned_data.get('username')
+            email = form.cleaned_data.get('email')
             password = form.cleaned_data.get('password')
-            user = authenticate(username=username, password=password)
+            try:
+                user = CustomUser.objects.get(email =email)
+                if not user.is_active:
+                    messages.warning(request,"you have not activated your account, please check your email to activate your account")
+                    return redirect('authentication:login')
+            except CustomUser.DoesNotExist:
+                messages.warning(request,"you have entered the wrong credentials, please check and try again")
+                return redirect('authentication:login')
             
-            if user is not None:
-                login(request, user)
+            authenticated_user = authenticate(email=email, password=password)
+            
+            if authenticated_user is not None:
+                
+                
+                login(request, authenticated_user)
                 if next_url:
                     return redirect(next_url)
                 if user.is_superuser:
@@ -85,7 +97,7 @@ def login_view(request):
                     school =School.objects.get(user=user)
                     return redirect('schoolapp:access_key_list',school_id=school.id)
             else:
-                return render(request, 'login.html', {'form': form, 'error': 'Invalid login credentials', 'next': next_url})
+                return render(request, 'accounts/login.html', {'form': form, 'error': 'Invalid login credentials', 'next': next_url})
     return render(request, 'accounts/login.html', {'form': form, 'next': next_url})
 
 
@@ -131,12 +143,14 @@ def password_reset_done(request):
 def reset_password_confirm(request, uidb64, token):
     try:
         uid = force_str(urlsafe_base64_decode(uidb64))
+        
         user = CustomUser.objects.get(pk=uid)
+        
     except (TypeError, ValueError, OverflowError, CustomUser.DoesNotExist):
         user = None
-
+    
+    
     if user is not None and default_token_generator.check_token(user, token):
-
         if request.method == 'POST':
             form = CustomPasswordResetForm(request.POST)
             if form.is_valid():
@@ -144,13 +158,18 @@ def reset_password_confirm(request, uidb64, token):
 
                 user.set_password(new_password)
                 user.save()
-                user = authenticate(request, email=user.email, password=new_password)
-                login(request, user)
-
-                return render(request, 'passwords/password_reset_complete.html')
+                print(user)
+                if not user.is_active:
+                    messages.warning(request, "You have not activated your account. Please check your email to activate your account.")
+                    return redirect('authentication:login')
+                else:
+                    authenticated_user = authenticate(request, email=user.email, password=new_password)
+                    print(authenticated_user)
+        
+                login(request, authenticated_user)
+            return render(request, 'passwords/password_reset_complete.html')
         else:
             form = CustomPasswordResetForm()
-
         return render(request, 'passwords/password_reset_confirm.html', {'form': form})
     else:
-        return render(request,'passwords/reset_invalid.html')
+        return render(request, 'passwords/reset_invalid.html')

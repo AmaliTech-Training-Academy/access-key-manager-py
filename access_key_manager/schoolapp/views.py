@@ -11,8 +11,9 @@ from django.core.paginator import Paginator
 def access_key_list(request,school_id):
     user = request.user 
     school = get_object_or_404(School, id=school_id)
-    access_keys = AccessKey.objects.filter(school=school)
-    paginator = Paginator(access_keys, 20) 
+    access_keys = AccessKey.objects.filter(school=school).order_by('-date_of_procurement')
+    paginator = Paginator(access_keys, 2) 
+   
 
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -26,8 +27,7 @@ def access_key_list(request,school_id):
 @login_required
 def purchase_key(request, school_id):
     school = School.objects.get(id=school_id)
-    active_key = AccessKey.objects.filter(school=school, status=AccessKey.ACTIVE).first()
-
+    active_key = AccessKey.objects.filter(school=school, status=AccessKey.ACTIVE)
     if active_key:
         messages.warning(request, 'you already have an active access key')
         return redirect('schoolapp:access_key_list', school_id=school.id)

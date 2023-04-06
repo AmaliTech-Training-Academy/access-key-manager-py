@@ -18,7 +18,7 @@ class AccessKeyListView(ListView):
     model = AccessKey
     template_name = 'adminapp/dashboard.html'
     context_object_name = 'access_keys'
-    ordering = ['school']
+    ordering = ['date_of_procurement']
     paginate_by = 10
 
 

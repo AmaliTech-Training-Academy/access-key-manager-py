@@ -72,5 +72,8 @@ class CustomPasswordResetForm(forms.ModelForm):
 
 
 
-class LogInForm(AuthenticationForm):
-    pass
+class LogInForm(forms.Form):
+    email = forms.EmailField(max_length=50)
+    password = forms.CharField(
+        label= 'password',
+        widget=forms.PasswordInput(attrs={'autocomplete': 'password'}))

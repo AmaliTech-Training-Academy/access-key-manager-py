@@ -1,8 +1,9 @@
 {% block content %}
+<h4><a href="{% url 'authentication:logout'%}"> Logout</a></h4>
 <h1>Access Keys</h1>
 
 
-<h4><a href="{% url 'authentication:logout'%}"> Logout</a></h4>
+
 <h3>welcome, {{school.school_name}}</h3>
 {% for access_key in access_keys %} {% if access_key.status == 'active' %}
 

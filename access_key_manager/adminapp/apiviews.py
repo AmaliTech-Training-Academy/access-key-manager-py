@@ -2,8 +2,7 @@ from rest_framework.views import APIView
 from django.http import Http404
 from .models import AccessKey
 from rest_framework.response import Response
-from rest_framework import status 
-from django.shortcuts import get_object_or_404,render
+from django.shortcuts import render
 from .serializers import AccessKeySerializer
 from .forms import EmailForm
 from authentication.models import CustomUser
