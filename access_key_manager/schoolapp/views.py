@@ -14,7 +14,7 @@ def access_key_list(request,school_id):
     school_id =user.id
     school = user.school_name
     access_keys = AccessKey.objects.filter(school_id=school_id).order_by('-date_of_procurement')
-    paginator = Paginator(access_keys, 5) 
+    paginator = Paginator(access_keys, 20) 
    
 
 
