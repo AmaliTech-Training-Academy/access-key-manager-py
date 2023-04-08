@@ -30,9 +30,11 @@ def access_key_list(request,school_id):
 
 @login_required
 def purchase_key(request,school_id):
+
     user = request.user 
+    school_id = user.id
     # school = user.school_name
-    active_key = AccessKey.objects.filter(id = school_id, status=AccessKey.ACTIVE)
+    active_key = AccessKey.objects.filter(school_id = school_id, status=AccessKey.ACTIVE)
     if active_key:
         messages.warning(request, 'you already have an active access key')
         return redirect('schoolapp:access_key_list',user.id)
