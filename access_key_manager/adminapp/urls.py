@@ -1,6 +1,5 @@
 from django.urls import path
 from adminapp import views
-from adminapp import apiviews
 from .views import AccessKeyListView
 from .apiviews import GetActiveAccessKey
 
@@ -12,5 +11,5 @@ urlpatterns = [
     path('update/<int:access_key_id>/', views.access_key_update, name='access_key_update'),
     path('revoke/<int:access_key_id>/', views.revoke_key, name='access_key_revoke'),
     path('acess_key_info/', GetActiveAccessKey.as_view(), name='access_key_info'),
-    # path('get_email/', apiviews.get_email, name='get_email'),
+    
 ]

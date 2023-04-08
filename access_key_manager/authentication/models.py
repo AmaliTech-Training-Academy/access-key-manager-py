@@ -50,6 +50,7 @@ class CustomUserManager(BaseUserManager):
 class CustomUser(AbstractUser):
     email = models.EmailField(unique=True)
     username =None
+    school_name = models.CharField(max_length=100)
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
     is_verified = models.BooleanField(default=False)
@@ -58,7 +59,8 @@ class CustomUser(AbstractUser):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
    
-
+    def __str__(self):
+        return self.school_name
 
 
 

@@ -3,7 +3,7 @@ from django.views.generic import ListView
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from .models import AccessKey
-from schoolapp.models import School
+# from schoolapp.models import School
 from .forms import AccessKeyForm
 from django.contrib import messages
 from django.core.mail import send_mail
@@ -11,6 +11,7 @@ from django.utils.html import strip_tags
 from django.template.loader import render_to_string
 from django.contrib.sites.shortcuts import get_current_site
 import datetime
+from authentication.models import CustomUser
 
 
 @method_decorator(login_required, name='dispatch')
@@ -25,7 +26,8 @@ class AccessKeyListView(ListView):
 @login_required
 def access_key_generate(request,school_id):
     user = request.user
-    schools = School.objects.get(id = school_id)
+    school_id = user.id
+    schools =user.school_name
     form = AccessKeyForm()
    
     
@@ -35,17 +37,18 @@ def access_key_generate(request,school_id):
             access_key = form.save(commit=False)
             
             # access_key.key = form.generate_key()
-            access_key.school = schools
+            access_key.school = user
             if access_key.expiry_date and access_key.expiry_date < datetime.date.today():
                 messages.warning(request,'Expiry date cannot be in the past.')
-                return redirect('adminapp:access_key_generate',schools.id)
+                return redirect('adminapp:access_key_generate',user.id)
             else:
                 access_key.expiry_date = form.cleaned_data['expiry_date']
             access_key.save()
-                
+            
             current_site = get_current_site(request)
-            access_key = AccessKey.objects.filter(school =schools,status='active').first()
-
+            access_key = AccessKey.objects.filter(school_id=school_id, status='active').first()
+            
+            
             message=render_to_string('message.html', {
                 'user': user,
                 'domain': current_site.domain,
@@ -58,7 +61,7 @@ def access_key_generate(request,school_id):
             email_from = user.email
             recipient_list =["douglasdanso66@gmail.com"]
             send_mail( mail_subject, message, email_from, recipient_list )
-            return redirect('schoolapp:access_key_list', schools.id)
+            return redirect('schoolapp:access_key_list', user.id)
         else:
             form = AccessKeyForm()
     context = {

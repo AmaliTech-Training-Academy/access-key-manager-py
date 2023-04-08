@@ -6,7 +6,7 @@ from django.shortcuts import render
 from .serializers import AccessKeySerializer
 from .forms import EmailForm
 from authentication.models import CustomUser
-from schoolapp.models import School
+# from schoolapp.models import School
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 
@@ -19,10 +19,10 @@ class GetActiveAccessKey(APIView):
             email = form.cleaned_data['email']
             try:
                 user = CustomUser.objects.get(email=email)
-                school = School.objects.get(user=user)
-                access_key = AccessKey.objects.get(status=AccessKey.ACTIVE, school=school)
+                # school = School.objects.get(user=user)
+                access_key = AccessKey.objects.get(status=AccessKey.ACTIVE, school=user.id)
                 serializer = AccessKeySerializer(access_key)
                 return Response(serializer.data)
-            except (CustomUser.DoesNotExist, School.DoesNotExist, AccessKey.DoesNotExist):
+            except (CustomUser.DoesNotExist, AccessKey.DoesNotExist):
                 raise Http404
         return render(request, 'adminapp/email_api_form.html', {'form': form})

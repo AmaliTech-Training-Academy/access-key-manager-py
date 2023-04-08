@@ -7,12 +7,7 @@
 
 <form method="post">
     {% csrf_token %}
-    <label for="school">School:</label>
-    <select name="school" id="school">
-      
-        <option value="{{ schools.pk }}">{{ schools.school_name }}</option>
-      
-    </select><br><br>
+
 
     <label for="expiry_date">Expiry Date:</label>
     <input type="date" name="expiry_date" id="expiry_date" required><br><br>
@@ -20,10 +15,9 @@
     <input type="submit" value="Generate Access Key">
 </form>
 {% if messages %}
-    <ul class="messages">
-        {% for message in messages %}
-        <li>{% if message.tags %}<b> "{{ message.tags }}:"</b>{% endif %} {{ message }}</li>
-        {% endfor %}
-    </ul>
-{% endif %}
-{% endblock %}
+<ul class="messages">
+    {% for message in messages %}
+    <li>{% if message.tags %}<b> "{{ message.tags }}:"</b>{% endif %} {{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %} {% endblock %}

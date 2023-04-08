@@ -15,7 +15,7 @@ from django.core.mail import send_mail
 from django.utils.encoding import force_str
 from django.views import generic
 from django.utils.html import strip_tags
-from schoolapp.models import School
+# from schoolapp.models import School
 from django.contrib import messages
 
 class SignUpView(generic.CreateView):
@@ -60,7 +60,7 @@ def activate(request, uidb64, token):
         user.is_active = True
         user.save()
         login(request, user)
-        return redirect('schoolapp:school')
+        return redirect('authentication:login')
         
     else:
         return render(request, 'accounts/activation_invalid.html')
@@ -94,8 +94,8 @@ def login_view(request):
                 if user.is_superuser:
                     return redirect('adminapp:access_key_list')
                 else:
-                    school =School.objects.get(user=user)
-                    return redirect('schoolapp:access_key_list',school_id=school.id)
+                    # school =user.school_name
+                    return redirect('schoolapp:access_key_list',school_id=user.id)
             else:
                 return render(request, 'accounts/login.html', {'form': form, 'error': 'Invalid login credentials', 'next': next_url})
     return render(request, 'accounts/login.html', {'form': form, 'next': next_url})

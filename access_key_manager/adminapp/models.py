@@ -1,5 +1,5 @@
 from django.db import models
-from schoolapp.models import School
+from authentication.models import CustomUser
 
 class AccessKey(models.Model):
     ACTIVE = 'active'
@@ -15,4 +15,4 @@ class AccessKey(models.Model):
     status = models.CharField(max_length=16, choices=STATUS_CHOICES, default=ACTIVE)
     date_of_procurement = models.DateField(auto_now_add=True)
     expiry_date = models.DateField()
-    school = models.ForeignKey(School, on_delete=models.CASCADE,null=True,blank=True)
+    school = models.ForeignKey(CustomUser, on_delete=models.CASCADE,null=True,blank=True)
